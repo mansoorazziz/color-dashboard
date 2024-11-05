@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk,simpledialog,messagebox,Label,Entry,Button
+from tkinter import ttk,simpledialog,messagebox,Label,Entry,Button,filedialog
 from PIL import Image, ImageTk
 import sqlite3
 
@@ -346,6 +346,18 @@ def button_command_3(root):
     submit_button = tk.Button(newentryFrame, text="Submit", font=('arial', 16, 'bold'), background="gray20", foreground='white', bd=5, width=8, pady=10,command=add_entry)
     submit_button.grid(row=5, column=0, columnspan=2, pady=10)
 
+def button_command_4(index,images,buttons):
+    print ("Clicked Right")
+    file_path = filedialog.askopenfilename()
+    if file_path:
+        new_image = Image.open(file_path)
+        new_image = new_image.resize((85, 85), Image.LANCZOS)
+        new_photo = ImageTk.PhotoImage(new_image)
+        
+        images[index] = new_photo  # Update the stored image reference
+        buttons[index].config(image=new_photo)
+        buttons[index].image = new_photo  # Keep a reference to the new image
+
 def writeintotextarea():
     pass
 
@@ -382,6 +394,7 @@ def create_dashboard():
     ]
     
     images = []
+    buttons =[]
     for index, image_path in enumerate(image_paths):
         row = index // 4
         col = index % 4
@@ -391,17 +404,22 @@ def create_dashboard():
             img = ImageTk.PhotoImage(image)
             images.append(img)  # Store the reference to avoid garbage collection
 
-            button = tk.Button(right_frame, image=img, compound='top', font=('Arial', 10, 'bold'))
+            button = tk.Button(right_frame, image=img, compound='top', font=('Arial', 10, 'bold')) 
+            buttons.append(button)
             if index == 0:
                 button.config(command=lambda: button_command_1(textArea,root))
                 # print("Command assigned to Button 1")
 
             elif index == 1:
-                button.config(command=lambda: button_command_2(root))
+                button.config(command=lambda idx=index: button_command_2(root))
                 # print("Command assigned to Button 2")
 
             elif index == 2:
-                button.config(command=lambda: button_command_3(root))
+                button.config(command=lambda idx=index: button_command_3(root))
+                # print("Command assigned to Button 14")
+            
+            elif index == 3:
+                button.config(command=lambda idx=index: button_command_4(index, images, buttons))
                 # print("Command assigned to Button 14")
                 
             else:
