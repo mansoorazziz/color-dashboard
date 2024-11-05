@@ -52,27 +52,7 @@ connectandcreatetable()
 # # Below this line coding
 # # ===================================================================================================
 
-class CustomDialog(tk.Toplevel):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.title("Enter Details")
-        
-        Label(self, text="Enter Quantity:", font=('times new roman',15,'bold'),background='gray20',foreground='white').grid(row=0, column=0, padx=10, pady=5)
-        self.quantity_entry = Entry(self,font=('arial',15),bd=7,width=18)
-        self.quantity_entry.grid(row=0, column=1, padx=10, pady=5)
-
-        Label(self, text="Enter Price:", font=('times new roman',15,'bold'),background='gray20',foreground='white').grid(row=1, column=0, padx=10, pady=5)
-        self.price_entry = Entry(self,font=('arial',15),bd=7,width=18)
-        self.price_entry.grid(row=1, column=1, padx=10, pady=5)
-
-        Button(self, text="Submit", command=self.on_submit, font=('arial', 12, 'bold'), background="gray20", foreground='white', bd=5, width=8, pady=10).grid(row=2, columnspan=2, pady=10)
-
-    def on_submit(self):
-        self.quantity = self.quantity_entry.get()
-        self.price = self.price_entry.get()
-        self.destroy()
-
-def extra_function_1(textArea,root):
+def extra_function_1(textArea,root): # Billing Function
 
     textArea.insert(1.0,'\t   ***Medical Store***\n\n')
     textArea.insert(tk.END,'\tContact # :0311-5552866\n\tEmail:mansoorpay@gmail.com\n')
@@ -103,11 +83,34 @@ def extra_function_1(textArea,root):
     itemPrice = dialog.price
     print(itemPrice,itemQuantity)
 
+
+class CustomDialog(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("Enter Details")
+        
+        Label(self, text="Enter Quantity:", font=('times new roman',15,'bold'),background='gray20',foreground='white').grid(row=0, column=0, padx=10, pady=5)
+        self.quantity_entry = Entry(self,font=('arial',15),bd=7,width=18)
+        self.quantity_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        Label(self, text="Enter Price:", font=('times new roman',15,'bold'),background='gray20',foreground='white').grid(row=1, column=0, padx=10, pady=5)
+        self.price_entry = Entry(self,font=('arial',15),bd=7,width=18)
+        self.price_entry.grid(row=1, column=1, padx=10, pady=5)
+
+        Button(self, text="Submit", command=self.on_submit, font=('arial', 12, 'bold'), background="gray20", foreground='white', bd=5, width=8, pady=10).grid(row=2, columnspan=2, pady=10)
+
+    def on_submit(self):
+        self.quantity = self.quantity_entry.get()
+        self.price = self.price_entry.get()
+        self.destroy()
+
+
+
 # ===================================================================================================
 # Inventory Management function
 # ===================================================================================================
 
-def extra_function_2(root):
+def extra_function_2(textArea,root): #inventory loading
     print("Button 2 clicked")
 
 # def open_inventory_window():
@@ -288,7 +291,7 @@ def extra_function_2(root):
     update_button = tk.Button(inventorybuttonFrame, text="Update", font=('arial', 16, 'bold'), background="gray20", foreground='white', bd=5, width=8, pady=10, command=update_item)
     update_button.pack(side='right')
 
-def extra_function_3(root):
+def extra_function_3(textArea,root):
     # print("Button 3 clicked")
     # def open_new_entry_window():
     new_entry_window = tk.Toplevel(root)
@@ -392,26 +395,41 @@ def create_dashboard():
 
     # Adding a grid of image icons to the right frame
     image_paths = [
-        "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/addicon.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG",
-        "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG",
-        "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg",
-        "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/addicon.jpg", "C:/Users/sc/Client gas/color-dashboard/images/sales.JPG", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg"
+        "images/img.JPG", "images/invt.jpg", "images/addicon.JPG", "images/img.JPG",
+        "images/img.JPG", "images/img.JPG", "images/img.JPG", "images/img.JPG",
+        "images/invt.jpg", "images/invt.jpg", "images/invt.jpg", "images/invt.jpg",
+        "images/invt.jpg", "images/addicon.jpg", "images/sales.JPG", "images/invt.jpg"
     ]
-    
+    button_data = [ ("Inventory Button", "Inventory"), 
+                   ("Sales Button", "Sales"), 
+                   ("Customers Button", "Customers"), 
+                   ("Reports Button", "Reports"),("Inventory Button", "Inventory"), 
+                   ("Sales Button", "Sales"), 
+                   ("Customers Button", "Customers"), 
+                   ("Reports Button", "Reports"),("Inventory Button", "Inventory"), 
+                   ("Sales Button", "Sales"), 
+                   ("Customers Button", "Customers"), 
+                   ("Reports Button", "Reports"),("Inventory Button", "Inventory"), 
+                   ("Sales Button", "Sales"), 
+                   ("Customers Button", "Customers"), 
+                   ("Reports Button", "Reports"), # Add more button names and arguments as needed 
+                   ]
     images = []
     icon_labels = []
-    extra_functions = [extra_function_1, extra_function_2, extra_function_3, extra_function_4] # Add more functions as needed
-    for index, image_path in enumerate(image_paths):
+    extra_functions = [ (extra_function_1, "Medical Store"), (extra_function_2, "Sales Report"), 
+                       (extra_function_3, "Inventory"), (extra_function_4, "Customer Data") ] # Add more function-argument pairs as needed
+    
+    for index in range(len(image_paths)):
         row = index // 4
         col = index % 4
         try:
-            image = Image.open(image_path)
+            image = Image.open(image_paths[index])
             image = image.resize((85, 85), Image.LANCZOS)
             img = ImageTk.PhotoImage(image)
             images.append(img)  # Store the reference to avoid garbage collection
 
             # Create a frame to hold the icon and the small button
-            frame = tk.Frame(right_frame, padx=5, pady=5)
+            frame = tk.Frame(right_frame, padx=5, pady=5,bg='lightgray')
             frame.grid(row=row, column=col)
 
             # Create the icon label
@@ -421,14 +439,12 @@ def create_dashboard():
             icon_labels.append(icon_label)
 
             # Create the small button below the icon label
-            if index < len(extra_functions):
-                extra_button = tk.Button(frame, text="Extra Button", command=extra_functions[index])
-            else:
-                extra_button = tk.Button(frame, text="Extra Button", command=lambda: print(f"Extra function for index {index}"))
+            button_name, button_arg = button_data[index]
+            extra_button = tk.Button(frame, bg='lightgray', text=button_name, command=lambda idx=index: extra_functions[idx][0](textArea, root)) 
             extra_button.grid(row=1, column=0)
 
         except Exception as e:
-            print(f"Error loading image {image_path}: {e}")
+            print(f"Error loading image {image_paths[index]}: {e}")
     
     root.grid_rowconfigure(1, weight=1)
     root.grid_columnconfigure(1, weight=1)
