@@ -72,7 +72,7 @@ class CustomDialog(tk.Toplevel):
         self.price = self.price_entry.get()
         self.destroy()
 
-def button_command_1(textArea,root):
+def extra_function_1(textArea,root):
 
     textArea.insert(1.0,'\t   ***Medical Store***\n\n')
     textArea.insert(tk.END,'\tContact # :0311-5552866\n\tEmail:mansoorpay@gmail.com\n')
@@ -107,7 +107,7 @@ def button_command_1(textArea,root):
 # Inventory Management function
 # ===================================================================================================
 
-def button_command_2(root):
+def extra_function_2(root):
     print("Button 2 clicked")
 
 # def open_inventory_window():
@@ -288,7 +288,7 @@ def button_command_2(root):
     update_button = tk.Button(inventorybuttonFrame, text="Update", font=('arial', 16, 'bold'), background="gray20", foreground='white', bd=5, width=8, pady=10, command=update_item)
     update_button.pack(side='right')
 
-def button_command_3(root):
+def extra_function_3(root):
     # print("Button 3 clicked")
     # def open_new_entry_window():
     new_entry_window = tk.Toplevel(root)
@@ -346,8 +346,13 @@ def button_command_3(root):
     submit_button = tk.Button(newentryFrame, text="Submit", font=('arial', 16, 'bold'), background="gray20", foreground='white', bd=5, width=8, pady=10,command=add_entry)
     submit_button.grid(row=5, column=0, columnspan=2, pady=10)
 
-def button_command_4(index,images,buttons):
-    print ("Clicked Right")
+def extra_function_4(index,images,buttons):
+    print("Extra function 1 executed!")
+
+def writeintotextarea():
+    pass
+
+def change_icon(index, images, icon_labels):
     file_path = filedialog.askopenfilename()
     if file_path:
         new_image = Image.open(file_path)
@@ -355,25 +360,25 @@ def button_command_4(index,images,buttons):
         new_photo = ImageTk.PhotoImage(new_image)
         
         images[index] = new_photo  # Update the stored image reference
-        buttons[index].config(image=new_photo)
-        buttons[index].image = new_photo  # Keep a reference to the new image
+        icon_labels[index].config(image=new_photo)
+        icon_labels[index].image = new_photo  # Keep a reference to the new image
 
-def writeintotextarea():
-    pass
+def extra_function():
+    print("Extra function executed!")
 
 def create_dashboard():
     root = tk.Tk()
     root.title("Colorful Dashboard")
     root.geometry("1000x600")
 
-    # head Frame
+    # Head Frame
     up_frame = tk.Frame(root, bg='orange', height=50)
-    up_frame.pack(side='top', fill='x')
+    up_frame.grid(row=0, column=0, columnspan=2, sticky='ew')
     tk.Label(up_frame, text="ITTEFAQ TRADERS", font=('Helvetica', 24, 'bold'), bg='orange', fg='green').pack(pady=10)
     
     # Left Frame
     left_frame = tk.Frame(root, bg='lightblue', width=350)
-    left_frame.pack(side='left', fill='y')
+    left_frame.grid(row=1, column=0, sticky='ns')
     scrollbar = tk.Scrollbar(left_frame, orient=tk.VERTICAL)
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     textArea = tk.Text(left_frame, bg='lightblue', height=30, width=50)
@@ -383,9 +388,9 @@ def create_dashboard():
 
     # Right Frame
     right_frame = tk.Frame(root, bg='lightgray')
-    right_frame.pack(side='right', expand=True, fill='both')
+    right_frame.grid(row=1, column=1, sticky='nsew')
 
-    # Adding a grid of image buttons to the right frame
+    # Adding a grid of image icons to the right frame
     image_paths = [
         "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/addicon.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG",
         "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG",
@@ -394,7 +399,8 @@ def create_dashboard():
     ]
     
     images = []
-    buttons =[]
+    icon_labels = []
+    extra_functions = [extra_function_1, extra_function_2, extra_function_3, extra_function_4] # Add more functions as needed
     for index, image_path in enumerate(image_paths):
         row = index // 4
         col = index % 4
@@ -404,35 +410,125 @@ def create_dashboard():
             img = ImageTk.PhotoImage(image)
             images.append(img)  # Store the reference to avoid garbage collection
 
-            button = tk.Button(right_frame, image=img, compound='top', font=('Arial', 10, 'bold')) 
-            buttons.append(button)
-            if index == 0:
-                button.config(command=lambda: button_command_1(textArea,root))
-                # print("Command assigned to Button 1")
+            # Create a frame to hold the icon and the small button
+            frame = tk.Frame(right_frame, padx=5, pady=5)
+            frame.grid(row=row, column=col)
 
-            elif index == 1:
-                button.config(command=lambda idx=index: button_command_2(root))
-                # print("Command assigned to Button 2")
+            # Create the icon label
+            icon_label = tk.Label(frame, image=img, compound='top')
+            icon_label.grid(row=0, column=0)
+            icon_label.bind("<Button-1>", lambda e, idx=index: change_icon(idx, images, icon_labels))
+            icon_labels.append(icon_label)
 
-            elif index == 2:
-                button.config(command=lambda idx=index: button_command_3(root))
-                # print("Command assigned to Button 14")
-            
-            elif index == 3:
-                button.config(command=lambda idx=index: button_command_4(index, images, buttons))
-                # print("Command assigned to Button 14")
-                
+            # Create the small button below the icon label
+            if index < len(extra_functions):
+                extra_button = tk.Button(frame, text="Extra Button", command=extra_functions[index])
             else:
-                # print('Other Button Clicked')
-                button.config(command=lambda row=row, col=col: print(f"Button {row*4+col+1} clicked"))
+                extra_button = tk.Button(frame, text="Extra Button", command=lambda: print(f"Extra function for index {index}"))
+            extra_button.grid(row=1, column=0)
 
-            button.grid(row=row, column=col, padx=10, pady=10)
         except Exception as e:
             print(f"Error loading image {image_path}: {e}")
     
+    root.grid_rowconfigure(1, weight=1)
+    root.grid_columnconfigure(1, weight=1)
     root.mainloop()
 
 create_dashboard()
+
+
+
+
+
+
+
+
+
+
+# def create_dashboard():
+#     root = tk.Tk()
+#     root.title("Colorful Dashboard")
+#     root.geometry("1000x600")
+
+#     # head Frame
+#     up_frame = tk.Frame(root, bg='orange', height=50)
+#     up_frame.grid(row=0, column=0, columnspan=2, sticky='ew')
+#     tk.Label(up_frame, text="ITTEFAQ TRADERS", font=('Helvetica', 24, 'bold'), bg='orange', fg='green').pack(pady=10)
+    
+#     # Left Frame
+#     left_frame = tk.Frame(root, bg='lightblue', width=350)
+#     left_frame.grid(row=1, column=0, sticky='ns')
+#     scrollbar = tk.Scrollbar(left_frame, orient=tk.VERTICAL)
+#     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+#     textArea = tk.Text(left_frame, bg='lightblue', height=30, width=50)
+#     textArea.pack()
+#     textArea.config(yscrollcommand=scrollbar.set)
+#     scrollbar.config(command=textArea.yview)
+
+#     # Right Frame
+#     right_frame = tk.Frame(root, bg='lightgray')
+#     right_frame.grid(row=1, column=1, sticky='nsew')
+
+#     # Adding a grid of image buttons to the right frame
+#     image_paths = [
+#         "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/addicon.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG",
+#         "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG", "C:/Users/sc/Client gas/color-dashboard/images/img.JPG",
+#         "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg",
+#         "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg", "C:/Users/sc/Client gas/color-dashboard/images/addicon.jpg", "C:/Users/sc/Client gas/color-dashboard/images/sales.JPG", "C:/Users/sc/Client gas/color-dashboard/images/invt.jpg"
+#     ]
+    
+#     images = []
+#     buttons =[]
+#     for index, image_path in enumerate(image_paths):
+#         row = index // 4
+#         col = index % 4
+#         try:
+#             image = Image.open(image_path)
+#             image = image.resize((85, 85), Image.LANCZOS)
+#             img = ImageTk.PhotoImage(image)
+#             images.append(img)  # Store the reference to avoid garbage collection
+
+#             # Create a frame to hold the icon and the small button 
+#             frame = tk.Frame(root, padx=5, pady=5) 
+#             frame.grid(row=row, column=col)
+
+#             # Create the icon button 
+#             icon_button = tk.Button(frame, image=img, compound='top', font=('Arial', 10, 'bold')) 
+#             icon_button.grid(row=0, column=0) .buttons.append(icon_button)
+
+#             # Create the small button below the icon button 
+#             change_button = tk.Button(frame, text="Change Icon", command=lambda idx=index: button_command_4(idx)) 
+#             change_button.grid(row=1, column=0)
+
+#             # if index == 0:
+#             #     button.config(command=lambda: button_command_1(textArea,root))
+#             #     # print("Command assigned to Button 1")
+
+#             # elif index == 1:
+#             #     button.config(command=lambda idx=index: button_command_2(root))
+#             #     # print("Command assigned to Button 2")
+
+#             # elif index == 2:
+#             #     button.config(command=lambda idx=index: button_command_3(root))
+#             #     # print("Command assigned to Button 14")
+            
+#             # elif index == 3:
+#             #     button.config(command=lambda idx=index: button_command_4(index, images, buttons))
+#             #     # print("Command assigned to Button 14")
+                
+#             # else:
+#             #     # print('Other Button Clicked')
+#             #     button.config(command=lambda row=row, col=col: print(f"Button {row*4+col+1} clicked"))
+
+#             # button.grid(row=row, column=col, padx=10, pady=10)
+#         except Exception as e:
+#             print(f"Error loading image {image_path}: {e}")
+#     root.grid_rowconfigure(1, weight=1) 
+#     root.grid_columnconfigure(1, weight=1)
+    
+#     root.mainloop()
+
+# create_dashboard()
 
 
 
